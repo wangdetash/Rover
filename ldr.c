@@ -11,7 +11,7 @@ char control_data;
 
 void main()
 {
-char a[10];
+char a[20];
 int ldr_out,lm35_out,temp;
 PINSEL0=0X00000005;	 	  
 IODIR0=0X000000001;
@@ -28,15 +28,30 @@ while(1)
 		while(!(U0LSR&1<<5));
 	 
         if(control_data=='w')
-	      forward();
+	      {
+	      	forward();
+	      	transmit("FORWARD\n");
+	      }
 		else if(control_data=='s')
-		 stop();
+		  {
+		 	stop();
+		 	transmit("STOP\n");
+		  }
 		else if(control_data=='x')
-	       backward();
+	      {
+	       	backward();
+	       	transmit("BACKWARD\n");
+	      }
 		else if(control_data=='a')
-	       left();
+	      {
+	       	left();
+	       	transmit("LEFT\n");
+	      }
 		else if(control_data=='d')
-	       right();	
+	      {
+	       	right();
+	       	transmit("RIGHT\n");
+	      }	
  		AD0CR=0X01200008;
  		AD1CR=0X01200008;
  		while(!(AD0GDR)&(80000000));
@@ -44,17 +59,17 @@ while(1)
  		while(!(AD1GDR)&(80000000));
  		lm35_out=((AD1GDR>>6)&(0X03FF));
  		temp=((lm35_out*100)/1024);
- 		sprintf(a,"temperature = %dDegree C \t %d\t",temp,lm35_out);
+ 		sprintf(a,"temperature=%d\tlm35_out=%d\tldr_out=%d\n",temp,lm35_out,ldr_out);
  		transmit(a); 
  		if(ldr_out<512)
  		{
    			IOSET0=0X80000000;
-   			transmit("lights on\t");
+   			transmit("lights on\n");
 		}
  		else 
  		{
  			IOCLR0=0X80000000;
- 			transmit("lights off\t");
+ 			transmit("lights off\n");
  		} 
 }
 }
