@@ -11,7 +11,11 @@ char control_data;
 
 void main()
 {
+<<<<<<< HEAD
 char a[50];
+=======
+char a[20];
+>>>>>>> f8ecda660758d64ef790b533e7f43fbba585dcca
 int ldr_out,lm35_out,temp,date,month,year,hour,min,sec;
 PINSEL0=0X00000005;	 	  
 IODIR0=0X000000001;
@@ -76,7 +80,11 @@ while(1)
         	date  = DOM;   
         	month = MONTH;  
         	year  = YEAR;
+<<<<<<< HEAD
  			sprintf(a,"temperature=%d\tlm35_out=%d\tldr_out=%d\ttime:%d:%d:%d\t%d-%d-%d\n",temp,lm35_out,ldr_out,hour,min,sec,date,month,year);
+=======
+ 			sprintf(a,"temperature=%d\tlm35_out=%d\tldr_out=%d\ttime:%d:%d:%d\n",temp,lm35_out,ldr_out,hour,min,sec);
+>>>>>>> f8ecda660758d64ef790b533e7f43fbba585dcca
  			transmit(a);
  		} 
  		if(ldr_out<512)
