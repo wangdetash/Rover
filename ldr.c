@@ -1,6 +1,9 @@
-//program to use two adc and transmit through uart and incorporated temperature sensing using lm35,ldr and rtc
+//program to use two adc and transmit through uart and incorporated temperature sensing using lm35,ldr,inbuilt rtc and gps
 #include <LPC214X.H>
+#include <stdio.h>
+
 void transmit(char *);
+void recieve(char *);
 void forward();
 void backward();
 void stop();
@@ -11,19 +14,19 @@ char control_data;
 
 void main()
 {
-<<<<<<< HEAD
-char a[50];
-=======
-char a[20];
->>>>>>> f8ecda660758d64ef790b533e7f43fbba585dcca
+int i,j;
+char a[60],b[30],c[30],d[]=" $GPGGA,154653,4428.2011,N,00440.5161,W,0,00,,-00044.7,M,051.6,M,,*6C";
 int ldr_out,lm35_out,temp,date,month,year,hour,min,sec;
-PINSEL0=0X00000005;	 	  
-IODIR0=0X000000001;
+PINSEL0=0X00050005;	 	  
+IODIR0=0X000000101;
 PINSEL2=0X00000000;
 IODIR1=0X0000003F;
 U0LCR=0X83;
 U0DLL=97;
 U0LCR=0X03;
+U1LCR=0X83;
+U1DLL=97;
+U1LCR=0X03;
 
 CCR =0X11;
 DOM=23;
@@ -79,13 +82,22 @@ while(1)
         	sec  = SEC; 
         	date  = DOM;   
         	month = MONTH;  
-        	year  = YEAR;
-<<<<<<< HEAD
- 			sprintf(a,"temperature=%d\tlm35_out=%d\tldr_out=%d\ttime:%d:%d:%d\t%d-%d-%d\n",temp,lm35_out,ldr_out,hour,min,sec,date,month,year);
-=======
- 			sprintf(a,"temperature=%d\tlm35_out=%d\tldr_out=%d\ttime:%d:%d:%d\n",temp,lm35_out,ldr_out,hour,min,sec);
->>>>>>> f8ecda660758d64ef790b533e7f43fbba585dcca
+        	year = YEAR;
+ 			sprintf(a,"temperature=%d\tlm35_out=%d\tldr_out=%d\ttime:%d:%d:%d\t%d-%d-%d\t",temp,lm35_out,ldr_out,hour,min,sec,date,month,year);
  			transmit(a);
+ 			//recieve(d);
+  			for(i=8,j=0;i<=25;i++,j++)
+			{
+				b[j]=d[i];
+			}
+			b[j]='\0';
+			for(i=27,j=0;i<=38;i++,j++)
+			{
+				c[j]=d[i];
+			}
+			c[j]='\0';
+			sprintf(a,"longitude:%s\tlatitude:%s\n",b,c);
+  			transmit(a);
  		} 
  		if(ldr_out<512)
  		{
@@ -109,6 +121,22 @@ U0THR=p[i];
 while(!(U0LSR&0X20));
 }
 }																														  
+
+void recieve(char *q)
+{
+	int i;
+	for(i=0;;i++)
+	{
+		while(!(U1LSR&(0X01)));
+		q[i]=U1RBR;
+		if(q[i]=='\r')
+		{
+			q[i]='\0';
+			break;
+		}
+	}
+	
+}
 
 
 
