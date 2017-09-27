@@ -1,4 +1,4 @@
-//program to use two adc and transmit through uart and incorporated temperature sensing using lm35,ldr,inbuilt rtc and gps
+//program to use two adc and transmit through uart and incorporated temperature sensing using lm35,ldr,inbuilt rtc and gps.
 #include <LPC214X.H>
 #include <stdio.h>
 
@@ -176,5 +176,3 @@ void right()
 	IOSET1=0X00200000;
 	IOSET1=0X00040000;
 }
-
-
