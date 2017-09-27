@@ -38,66 +38,10 @@ SEC=40;
 
 	while(1)
 	{
-		
-
-	 
-    	if(control_data=='w')
-	      {
-	      	forward();
-	      	transmit("moving forward\n");
-	      }
-		else if(control_data=='s')
-		  {
-		 	stop();
-		 	transmit("stop\n");
-		  }
-		else if(control_data=='x')
-	      {
-	       	backward();
-	       	transmit("moving backward\n");
-	      }
-		else if(control_data=='a')
-	      {
-	       	left();
-	       	transmit("turning left\n");
-	      }
-		else if(control_data=='d')
-	      {
-	       	right();
-	       	transmit("turning right\n");
-	      }	
-		else if(control_data=='q')
-	      {  
- 				AD0CR=0X01200008;
- 				AD1CR=0X01200008;
- 				while(!(AD0GDR)&(80000000));
- 				ldr_out=((AD0GDR>>6)&(0X03FF));
- 				light=((ldr_out*100)/1024);
- 				while(!(AD1GDR)&(80000000));
- 				lm35_out=((AD1GDR>>6)&(0X03FF));
- 				temp=((lm35_out*100)/1024);
- 				hour=HOUR;
-        		min=MIN; 
-        		sec=SEC; 
-        		date=DOM;   
-        		month=MONTH;  
-        		year=YEAR;
- 				sprintf(a,"lm35_out=%d  temperature=%d  ldr_out=%d light_intensity=%d  time:%d:%d:%d date:%d-%d-%d  ",lm35_out,temp,ldr_out,light,hour,min,sec,date,month,year);
- 				transmit(a);
- 				//recieve(d);
-  				for(i=8,j=0;i<=25;i++,j++)
-				{
-					b[j]=d[i];
-				}
-				b[j]='\0';
-				for(i=27,j=0;i<=38;i++,j++)
-				{
-					c[j]=d[i];
-				}
-				c[j]='\0';
-				sprintf(a,"longitude:%s  latitude:%s\n",b,c);
-  				transmit(a);
- 			} 
+		AD0CR=0X01200008;
+ 		while(!(AD0GDR)&(80000000));
+ 		ldr_out=((AD0GDR>>6)&(0X03FF));
+ 		light=((ldr_out*100)/1024);
  		if(ldr_out<512)
  		{
    			IOSET0=0X80000000;
@@ -105,8 +49,66 @@ SEC=40;
  		else 
  		{
  			IOCLR0=0X80000000;
- 		} 
+ 		}
+ 		AD1CR=0X01200008; 
+		while(!(AD1GDR)&(80000000));
+ 		lm35_out=((AD1GDR>>6)&(0X03FF));
+ 		temp=((lm35_out*100)/1024);
 
+	 	switch(control_data)
+    	
+	      {
+	      	case 'w':
+	      	forward();
+	      	transmit("moving forward\n");
+	      	break;
+
+			case 's':
+		  	stop();
+		 	transmit("stop\n");
+		 	break;
+		  
+		 	case 'x':
+	       	backward();
+	       	transmit("moving backward\n");
+	      	break;
+
+			case 'a':
+	       	left();
+	       	transmit("turning left\n");
+	      	break;
+			
+			case 'd':
+	       	right();
+	       	transmit("turning right\n");
+	      	break;
+
+	      	default:  
+ 			hour=HOUR;
+        	min=MIN; 
+        	sec=SEC; 
+        	date=DOM;   
+        	month=MONTH;  
+        	year=YEAR;
+ 			sprintf(a,"lm35_out=%d  temperature=%d  ldr_out=%d light_intensity=%d  time:%d:%d:%d date:%d-%d-%d  ",lm35_out,temp,ldr_out,light,hour,min,sec,date,month,year);
+ 			transmit(a);
+ 			//recieve(d);
+  			for(i=8,j=0;i<=25;i++,j++)
+			{
+				b[j]=d[i];
+			}
+			b[j]='\0';
+			for(i=27,j=0;i<=38;i++,j++)
+			{
+				c[j]=d[i];
+			}
+			c[j]='\0';
+			sprintf(a,"longitude:%s  latitude:%s\n",b,c);
+  			transmit(a);
+  			control_data='q';
+  			break;
+ 		} 
+ 		
  		while(!(U0LSR&1<<0));
 		control_data=U0RBR;
 	}
