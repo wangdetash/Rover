@@ -10,7 +10,7 @@ void stop();
 void left();
 void right();
 
-char control_data;
+char control_data='q';
 
 void main()
 {
@@ -38,8 +38,7 @@ SEC=40;
 
 	while(1)
 	{
-		while(!(U0LSR&1<<0));
-		control_data=U0RBR;
+		
 
 	 
     	if(control_data=='w')
@@ -107,6 +106,9 @@ SEC=40;
  		{
  			IOCLR0=0X80000000;
  		} 
+
+ 		while(!(U0LSR&1<<0));
+		control_data=U0RBR;
 	}
 }
 
