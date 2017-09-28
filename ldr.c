@@ -20,8 +20,6 @@ void right();
 void recieve()__irq
 {	
 control_data=U0RBR;
-U0THR=control_data;
-while(!(U0LSR&0X20));
 drive(control_data);
 VICVectAddr=0;
 }
@@ -106,8 +104,7 @@ SEC=40;
   			
  		
  		
- 		//while(!(U0LSR&1<<0));
-		//control_data=U0RBR;
+ 		
 	}
 }
 
