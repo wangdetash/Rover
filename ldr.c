@@ -77,9 +77,7 @@ SEC=40;
  		lm35_out=((AD1GDR>>6)&(0X03FF));
  		temp=((lm35_out*100)/1024);
 
-
-	      	 
- 			hour=HOUR;
+			hour=HOUR;
         	min=MIN; 
         	sec=SEC; 
         	date=DOM;   
