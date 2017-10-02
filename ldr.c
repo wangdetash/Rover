@@ -4,7 +4,7 @@
 #include <LPC214X.H>
 #include <stdio.h>
 
-char control_data='q';
+char control_data;
 
 void transmit(char *);
 void recievegps(char *);
@@ -192,6 +192,7 @@ void stop()
 
 void left()
 {
+
 	IOSET1=0X00010000;
 	IOSET1=0X00020000;
 	IOSET1=0X00080000;
